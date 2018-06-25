@@ -30,7 +30,7 @@ import com.google.errorprone.annotations.Immutable;
 import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An immutable well-formed internet domain name, such as {@code com} or {@code foo.co.uk}. Only
@@ -85,8 +85,6 @@ public final class InternetDomainName {
    * relevant suffix was found.
    */
   private static final int NO_SUFFIX_FOUND = -1;
-
-  private static final String DOT_REGEX = "\\.";
 
   /**
    * Maximum parts (labels) in a domain name. This value arises from the 255-octet limit described
@@ -592,10 +590,10 @@ public final class InternetDomainName {
    */
   private static boolean matchesWildcardSuffixType(
       Optional<PublicSuffixType> desiredType, String domain) {
-    final String[] pieces = domain.split(DOT_REGEX, 2);
-    return pieces.length == 2
+    List<String> pieces = DOT_SPLITTER.limit(2).splitToList(domain);
+    return pieces.size() == 2
         && matchesType(
-            desiredType, Optional.fromNullable(PublicSuffixPatterns.UNDER.get(pieces[1])));
+            desiredType, Optional.fromNullable(PublicSuffixPatterns.UNDER.get(pieces.get(1))));
   }
 
   /**
@@ -619,7 +617,7 @@ public final class InternetDomainName {
    * version of the same domain name would not be considered equal.
    */
   @Override
-  public boolean equals(@NullableDecl Object object) {
+  public boolean equals(@Nullable Object object) {
     if (object == this) {
       return true;
     }

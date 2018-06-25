@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.compatqual.MonotonicNonNullDecl;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * A builder of {@link LoadingCache} and {@link Cache} instances having any combination of the
@@ -227,20 +227,20 @@ public final class CacheBuilder<K, V> {
   int concurrencyLevel = UNSET_INT;
   long maximumSize = UNSET_INT;
   long maximumWeight = UNSET_INT;
-  @MonotonicNonNullDecl Weigher<? super K, ? super V> weigher;
+  @MonotonicNonNull Weigher<? super K, ? super V> weigher;
 
-  @MonotonicNonNullDecl Strength keyStrength;
-  @MonotonicNonNullDecl Strength valueStrength;
+  @MonotonicNonNull Strength keyStrength;
+  @MonotonicNonNull Strength valueStrength;
 
   long expireAfterWriteNanos = UNSET_INT;
   long expireAfterAccessNanos = UNSET_INT;
   long refreshNanos = UNSET_INT;
 
-  @MonotonicNonNullDecl Equivalence<Object> keyEquivalence;
-  @MonotonicNonNullDecl Equivalence<Object> valueEquivalence;
+  @MonotonicNonNull Equivalence<Object> keyEquivalence;
+  @MonotonicNonNull Equivalence<Object> valueEquivalence;
 
-  @MonotonicNonNullDecl RemovalListener<? super K, ? super V> removalListener;
-  @MonotonicNonNullDecl Ticker ticker;
+  @MonotonicNonNull RemovalListener<? super K, ? super V> removalListener;
+  @MonotonicNonNull Ticker ticker;
 
   Supplier<? extends StatsCounter> statsCounterSupplier = NULL_STATS_COUNTER;
 
@@ -640,7 +640,7 @@ public final class CacheBuilder<K, V> {
    * @throws IllegalArgumentException if {@code duration} is negative
    * @throws IllegalStateException if the time to live or time to idle was already set
    * @throws ArithmeticException for durations greater than +/- approximately 292 years
-   * @since NEXT
+   * @since 25.0
    */
   @J2ObjCIncompatible
   @GwtIncompatible // java.time.Duration
@@ -659,6 +659,9 @@ public final class CacheBuilder<K, V> {
    * <p>Expired entries may be counted in {@link Cache#size}, but will never be visible to read or
    * write operations. Expired entries are cleaned up as part of the routine maintenance described
    * in the class javadoc.
+   *
+   * <p>If you can represent the duration as a {@link java.time.Duration} (which should be preferred
+   * when feasible), use {@link #expireAfterWrite(Duration)} instead.
    *
    * @param duration the length of time after an entry is created that it should be automatically
    *     removed
@@ -702,7 +705,7 @@ public final class CacheBuilder<K, V> {
    * @throws IllegalArgumentException if {@code duration} is negative
    * @throws IllegalStateException if the time to idle or time to live was already set
    * @throws ArithmeticException for durations greater than +/- approximately 292 years
-   * @since NEXT
+   * @since 25.0
    */
   @J2ObjCIncompatible
   @GwtIncompatible // java.time.Duration
@@ -724,6 +727,9 @@ public final class CacheBuilder<K, V> {
    * <p>Expired entries may be counted in {@link Cache#size}, but will never be visible to read or
    * write operations. Expired entries are cleaned up as part of the routine maintenance described
    * in the class javadoc.
+   *
+   * <p>If you can represent the duration as a {@link java.time.Duration} (which should be preferred
+   * when feasible), use {@link #expireAfterAccess(Duration)} instead.
    *
    * @param duration the length of time after an entry is last accessed that it should be
    *     automatically removed
@@ -772,7 +778,7 @@ public final class CacheBuilder<K, V> {
    * @throws IllegalArgumentException if {@code duration} is negative
    * @throws IllegalStateException if the refresh interval was already set
    * @throws ArithmeticException for durations greater than +/- approximately 292 years
-   * @since NEXT
+   * @since 25.0
    */
   @J2ObjCIncompatible
   @GwtIncompatible // java.time.Duration
@@ -797,6 +803,9 @@ public final class CacheBuilder<K, V> {
    * otherwise.
    *
    * <p><b>Note:</b> <i>all exceptions thrown during refresh will be logged and then swallowed</i>.
+   *
+   * <p>If you can represent the duration as a {@link java.time.Duration} (which should be preferred
+   * when feasible), use {@link #refreshAfterWrite(Duration)} instead.
    *
    * @param duration the length of time after an entry is created that it should be considered
    *     stale, and thus eligible for refresh
